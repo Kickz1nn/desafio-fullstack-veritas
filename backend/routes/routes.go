@@ -32,6 +32,8 @@ func SetupRoutes() *http.ServeMux {
 		switch r.Method {
 		case http.MethodPut:
 			handlers.UpdateTask(w, r, path)
+		case http.MethodDelete:
+			handlers.DeleteTask(w, r, path)
 		default:
 			http.Error(w, "Método não permitido", http.StatusMethodNotAllowed)
 		}

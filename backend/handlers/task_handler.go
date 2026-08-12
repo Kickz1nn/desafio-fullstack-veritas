@@ -64,3 +64,21 @@ func UpdateTask(w http.ResponseWriter, r *http.Request, idString string) {
 
 	json.NewEncoder(w).Encode(updatedTask)
 }
+
+func DeleteTask(w http.ResponseWriter, r *http.Request, idString string) {
+	id, err := strconv.Atoi(idString)
+
+	if err != nil {
+		http.Error(w, "ID inválido", http.StatusBadRequest)
+		return
+	}
+
+	deleted := storage.DeleteTask(id)
+
+	if !deleted {
+		http.Error(w, "Tarefa não encontrada", http.StatusNotFound)
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
+}

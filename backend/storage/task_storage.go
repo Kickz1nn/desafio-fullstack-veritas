@@ -34,3 +34,14 @@ func UpdateTask(id int, updatedTask models.Task) (models.Task, bool) {
 
 	return models.Task{}, false
 }
+
+func DeleteTask(id int) bool {
+	for i, task := range tasks {
+		if task.ID == id {
+			tasks = append(tasks[:i], tasks[i+1:]...)
+			return true
+		}
+	}
+
+	return false
+}
