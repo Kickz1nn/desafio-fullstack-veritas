@@ -13,3 +13,11 @@ var tasks = []models.Task{
 func GetAllTask() []models.Task {
 	return tasks
 }
+
+func CreateTask(task models.Task) models.Task {
+	task.ID = len(tasks) + 1
+
+	tasks = append(tasks, task)
+
+	return task
+}
