@@ -7,6 +7,7 @@ import (
 
 	"desafio-fullstack-veritas/backend/models"
 	"desafio-fullstack-veritas/backend/storage"
+	"desafio-fullstack-veritas/backend/validators"
 )
 
 func GetTasks(w http.ResponseWriter, r *http.Request) {
@@ -26,6 +27,13 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	task, validationError := validators.ValidateTask(task)
+
+	if validationError != "" {
+		http.Error(w, validationError, http.StatusBadRequest)
 		return
 	}
 
@@ -52,6 +60,13 @@ func UpdateTask(w http.ResponseWriter, r *http.Request, idString string) {
 
 	if err != nil {
 		http.Error(w, "JSON inválido", http.StatusBadRequest)
+		return
+	}
+
+	task, validationError := validators.ValidateTask(task)
+
+	if validationError != "" {
+		http.Error(w, validationError, http.StatusBadRequest)
 		return
 	}
 
