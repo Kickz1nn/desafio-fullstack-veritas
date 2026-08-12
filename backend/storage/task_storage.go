@@ -21,3 +21,16 @@ func CreateTask(task models.Task) models.Task {
 
 	return task
 }
+
+func UpdateTask(id int, updatedTask models.Task) (models.Task, bool) {
+	for i, task := range tasks {
+		if task.ID == id {
+			updatedTask.ID = id
+			tasks[i] = updatedTask
+
+			return updatedTask, true
+		}
+	}
+
+	return models.Task{}, false
+}

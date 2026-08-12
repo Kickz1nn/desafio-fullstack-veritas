@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"desafio-fullstack-veritas/backend/models"
 	"desafio-fullstack-veritas/backend/storage"
@@ -33,4 +34,33 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 
 	json.NewEncoder(w).Encode(createdTask)
+}
+
+func UpdateTask(w http.ResponseWriter, r *http.Request, idString string) {
+	w.Header().Set("Content-Type", "application/json")
+
+	id, err := strconv.Atoi(idString)
+
+	if err != nil {
+		http.Error(w, "ID inválido", http.StatusBadRequest)
+		return
+	}
+
+	var task models.Task
+
+	err = json.NewDecoder(r.Body).Decode(&task)
+
+	if err != nil {
+		http.Error(w, "JSON inválido", http.StatusBadRequest)
+		return
+	}
+
+	updatedTask, found := storage.UpdateTask(id, task)
+
+	if !found {
+		http.Error(w, "Tarefa não encontrada", http.StatusNotFound)
+		return
+	}
+
+	json.NewEncoder(w).Encode(updatedTask)
 }
