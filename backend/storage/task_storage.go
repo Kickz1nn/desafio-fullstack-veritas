@@ -10,12 +10,15 @@ var tasks = []models.Task{
 	},
 }
 
+var nextID = 2
+
 func GetAllTask() []models.Task {
 	return tasks
 }
 
 func CreateTask(task models.Task) models.Task {
-	task.ID = len(tasks) + 1
+	task.ID = nextID
+	nextID++
 
 	tasks = append(tasks, task)
 
