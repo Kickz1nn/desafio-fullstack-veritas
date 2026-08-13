@@ -1,112 +1,227 @@
-Mini Kanban de Tarefas
+# Mini Kanban de Tarefas
 
-Desafio técnico desenvolvido para o processo seletivo da Veritas.
+Aplicação web de gerenciamento de tarefas desenvolvida como parte de um desafio técnico para o processo seletivo da **Veritas**.
 
-O projeto consiste em uma aplicação de gerenciamento de tarefas no formato Kanban, utilizando React no frontend e Go no backend. A aplicação permite criar, visualizar, editar, mover e excluir tarefas por meio de uma API REST.
+O projeto consiste em um sistema Kanban que permite organizar tarefas em três etapas: **A Fazer**, **Em Progresso** e **Concluídas**.
 
-Tecnologias utilizadas
-React
-Vite
-JavaScript
-Tailwind CSS
-Go
-Funcionalidades
-Visualização de tarefas em três colunas:
-A Fazer
-Em Progresso
-Concluídas
-Criação de tarefas
-Edição de tarefas
-Exclusão de tarefas
-Movimentação de tarefas entre colunas
-Validações básicas
-Comunicação entre frontend e backend através de API REST
-Configuração de CORS
-Como executar
-Pré-requisitos
-Node.js
-npm
-Go
-Backend
+A aplicação possui um frontend desenvolvido em React e um backend desenvolvido em Go, com comunicação realizada através de uma API REST.
+
+## Funcionalidades
+
+* Visualização de tarefas em formato Kanban
+* Criação de tarefas
+* Edição de tarefas
+* Exclusão de tarefas
+* Movimentação de tarefas entre os diferentes status
+* Validações básicas dos dados
+* Comunicação entre frontend e backend através de API REST
+* Organização do backend por responsabilidades
+* Configuração de CORS
+
+## Tecnologias
+
+### Frontend
+
+* React
+* JavaScript
+* Vite
+* Tailwind CSS
+* React DOM
+
+### Backend
+
+* Go
+* API REST
+* CORS
+* Armazenamento em memória
+
+## Como executar
+
+### Pré-requisitos
+
+Antes de executar o projeto, certifique-se de ter instalado:
+
+* [Node.js](https://nodejs.org/)
+* npm
+* [Go](https://go.dev/)
+
+### 1. Clone o repositório
+
+```bash
+git clone https://github.com/Kickz1nn/desafio-fullstack-veritas.git
+cd desafio-fullstack-veritas
+```
+
+### 2. Execute o backend
 
 Entre na pasta do backend:
 
+```bash
 cd backend
+```
 
 Execute o servidor:
 
+```bash
 go run .
+```
 
-O backend será executado em:
+O backend será iniciado em:
 
+```text
 http://localhost:8080
-Frontend
+```
 
-Em outro terminal, entre na pasta do frontend:
+### 3. Execute o frontend
 
+Abra outro terminal e entre na pasta do frontend:
+
+```bash
 cd frontend
+```
 
 Instale as dependências:
 
+```bash
 npm install
+```
 
 Execute a aplicação:
 
+```bash
 npm run dev
+```
 
-O frontend será disponibilizado pelo Vite no endereço exibido no terminal, normalmente:
+O Vite disponibilizará a aplicação no endereço exibido no terminal, normalmente:
 
+```text
 http://localhost:5173
-API
+```
 
-A aplicação possui os seguintes endpoints:
+Com o backend e o frontend em execução, a aplicação estará pronta para uso.
 
-Método	Endpoint	Descrição
-GET	/tasks	Lista todas as tarefas
-POST	/tasks	Cria uma nova tarefa
-PUT	/tasks/:id	Atualiza uma tarefa
-DELETE	/tasks/:id	Exclui uma tarefa
-Modelo de tarefa
+## API
+
+O backend disponibiliza uma API REST para gerenciamento das tarefas.
+
+### Endpoints
+
+| Método   | Endpoint     | Descrição              |
+| -------- | ------------ | ---------------------- |
+| `GET`    | `/tasks`     | Lista todas as tarefas |
+| `POST`   | `/tasks`     | Cria uma nova tarefa   |
+| `PUT`    | `/tasks/:id` | Atualiza uma tarefa    |
+| `DELETE` | `/tasks/:id` | Exclui uma tarefa      |
+
+### Modelo de tarefa
+
+Uma tarefa possui a seguinte estrutura:
+
+```json
 {
   "id": 1,
   "title": "Estudar React",
   "status": "todo"
 }
+```
 
-Os valores possíveis para status são:
+### Status disponíveis
 
-todo: A Fazer
-in_progress: Em Progresso
-done: Concluídas
-Decisões técnicas
-Frontend
+| Valor         | Descrição    |
+| ------------- | ------------ |
+| `todo`        | A Fazer      |
+| `in_progress` | Em Progresso |
+| `done`        | Concluídas   |
 
-O frontend foi desenvolvido utilizando React, com componentização da interface e gerenciamento do estado das tarefas através dos recursos do próprio React.
+### Exemplo de criação
 
-A comunicação com o backend foi centralizada no arquivo services/api.js, mantendo as requisições HTTP separadas da lógica de apresentação dos componentes.
+Para criar uma nova tarefa, envie uma requisição `POST` para `/tasks` com um corpo semelhante a:
 
-Backend
+```json
+{
+  "title": "Estudar React",
+  "status": "todo"
+}
+```
 
-O backend foi desenvolvido em Go utilizando uma API REST para disponibilizar as operações de gerenciamento das tarefas.
+## Decisões técnicas
 
-O código foi organizado separando responsabilidades entre handlers, rotas, modelos, armazenamento, validações e middleware.
+### Frontend
 
-Armazenamento
+O frontend foi desenvolvido utilizando React, com a interface dividida em componentes e o gerenciamento do estado das tarefas realizado através dos recursos nativos do React.
 
-Foi utilizado armazenamento em memória, conforme permitido pelo escopo do desafio. A escolha mantém a implementação simples e adequada ao objetivo do MVP, sem a necessidade de configurar um banco de dados.
+A comunicação com a API foi centralizada no serviço responsável pelas requisições HTTP, mantendo essa responsabilidade separada da lógica de apresentação dos componentes.
 
-Estilização
+### Backend
 
-Foi utilizado Tailwind CSS para a construção da interface, permitindo uma implementação rápida e responsiva dos componentes da aplicação.
+O backend foi desenvolvido em Go seguindo uma arquitetura baseada em API REST.
 
-User Flow
+As responsabilidades foram separadas entre diferentes camadas, incluindo:
 
-O fluxo de utilização da aplicação está disponível em:
+* Handlers
+* Rotas
+* Modelos
+* Armazenamento
+* Validações
+* Middleware
 
-docs/user-flow.png
+Essa organização facilita a manutenção e permite que cada parte da aplicação tenha uma responsabilidade bem definida.
 
-O diagrama apresenta as principais ações do usuário dentro do sistema, incluindo visualização, criação, edição, movimentação e exclusão de tarefas.
+### Armazenamento
 
-Git
+Foi utilizado **armazenamento em memória**, conforme permitido pelo escopo do desafio.
 
-O desenvolvimento foi organizado utilizando branches e commits descritivos, buscando manter um histórico de alterações claro e organizado.
+Essa abordagem mantém a implementação simples e adequada ao objetivo do projeto, sem a necessidade de configurar um banco de dados externo.
+
+Como os dados são armazenados apenas durante a execução do servidor, as tarefas são perdidas quando o backend é encerrado ou reiniciado.
+
+### Estilização
+
+A interface utiliza **Tailwind CSS**, permitindo a criação dos componentes de forma rápida, consistente e responsiva.
+
+## User Flow
+
+O fluxo de utilização da aplicação foi documentado através de um diagrama que apresenta as principais interações do usuário com o sistema.
+
+![User Flow](docs/User-Flow.png)
+
+O fluxo contempla as principais operações disponíveis, incluindo:
+
+* Visualização das tarefas
+* Criação de tarefas
+* Edição de tarefas
+* Movimentação entre os status
+* Exclusão de tarefas
+
+## Validações
+
+O backend possui validações para garantir que os dados recebidos pela API estejam de acordo com as regras esperadas pela aplicação.
+
+Entre os dados tratados estão:
+
+* Título da tarefa
+* Identificador da tarefa
+* Status da tarefa
+* Existência da tarefa durante operações de atualização e exclusão
+
+## Desenvolvimento
+
+O desenvolvimento foi realizado utilizando Git para controle de versão.
+
+Foram utilizadas branches e commits descritivos com o objetivo de manter um histórico de alterações organizado e facilitar o acompanhamento da evolução do projeto.
+
+## Objetivo do projeto
+
+O objetivo deste projeto é demonstrar a implementação de uma aplicação fullstack simples, contemplando:
+
+* Desenvolvimento de uma interface web com React
+* Construção de uma API REST utilizando Go
+* Integração entre frontend e backend
+* Organização e separação de responsabilidades
+* Implementação das operações CRUD
+* Validação de dados
+* Controle de versão utilizando Git
+
+---
+
+**Desafio técnico — Veritas**
