@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getTasks } from "../services/api";
+import { createTask, getTasks } from "../services/api";
 import Column from "./Column";
 import TaskForm from "./TaskForm";
 
@@ -36,6 +36,7 @@ function KanbanBoard() {
   }, []);
 
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [error, setError] = useState('');
 
   const columns = [
     {
@@ -52,15 +53,18 @@ function KanbanBoard() {
     },
   ];
 
-  function handleAddTask(title) {
-    const newTask = {
-      id: Date.now(),
-      title,
-      status: "todo",
-    };
-
-    setTasks((currentTasks) => [...currentTasks, newTask]);
-    setIsFormOpen(false);
+  async function handleAddTask(title) {
+    try {
+      const newTask = await createTask({
+        title,
+        status: "todo"
+      });
+      setTasks((currentTasks) => [...currentTasks, newTask]);
+      setIsFormOpen(false);
+    } catch (error) {
+      console.error(error);
+      setError('Erro ao criar tarefa. Por favor, tente novamente.');
+    }
   }
 
   return (
@@ -73,6 +77,12 @@ function KanbanBoard() {
           + Nova tarefa
         </button>
       </div>
+
+      {error && (
+        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {error}
+        </div>
+      )}
 
       {isFormOpen && (
         <TaskForm
