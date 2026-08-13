@@ -1,6 +1,6 @@
 import TaskCard from './TaskCard'
 
-function Column({ title, status, tasks }) {
+function Column({ title, status, tasks, onEdit, onMove, onDelete }) {
   const columnTasks = tasks.filter((task) => task.status === status)
 
   return (
@@ -20,6 +20,9 @@ function Column({ title, status, tasks }) {
           <TaskCard
             key={task.id}
             task={task}
+            onEdit={onEdit}
+            onMove={onMove}
+            onDelete={onDelete}
           />
         ))}
       </div>

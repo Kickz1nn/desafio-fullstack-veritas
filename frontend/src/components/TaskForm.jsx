@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
-function TaskForm({ onAddTask, onCancel }) {
-  const [title, setTitle] = useState('')
+function TaskForm({ task, onAddTask, onUpdateTask, onCancel }) {
+  const [title, setTitle] = useState(task ? task.title : '')
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -12,7 +12,15 @@ function TaskForm({ onAddTask, onCancel }) {
       return
     }
 
-    onAddTask(trimmedTitle)
+    if (task) {
+      onUpdateTask({
+        ...task,
+        title: trimmedTitle,
+      })
+    } else {
+      onAddTask(trimmedTitle)
+    }
+
     setTitle('')
   }
 
@@ -21,6 +29,10 @@ function TaskForm({ onAddTask, onCancel }) {
       onSubmit={handleSubmit}
       className="mb-6 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm"
     >
+      <h2 className="mb-4 text-lg font-semibold text-zinc-900">
+        {task ? 'Editar tarefa' : 'Nova tarefa'}
+      </h2>
+
       <label
         htmlFor="task-title"
         className="mb-2 block text-sm font-medium text-zinc-700"
@@ -43,7 +55,7 @@ function TaskForm({ onAddTask, onCancel }) {
           type="submit"
           className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800"
         >
-          Adicionar
+          {task ? 'Atualizar' : 'Adicionar'}
         </button>
 
         <button

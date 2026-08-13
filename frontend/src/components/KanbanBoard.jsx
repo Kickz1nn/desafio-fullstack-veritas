@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { createTask, getTasks } from "../services/api";
+import { createTask, getTasks, updateTask, deleteTask } from "../services/api";
 import Column from "./Column";
 import TaskForm from "./TaskForm";
 
@@ -37,6 +37,7 @@ function KanbanBoard() {
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [error, setError] = useState('');
+  const [editingTask, setEditingTask] = useState(null);
 
   const columns = [
     {
@@ -67,6 +68,82 @@ function KanbanBoard() {
     }
   }
 
+  function handleEdit(task) {
+    setEditingTask(task)
+    setIsFormOpen(true)
+  }
+
+  async function handleUpdateTask(task) {
+    try {
+      setError('')
+
+      const result = await updateTask(task.id, {
+        title: task.title,
+        status: task.status,
+      })
+
+      setTasks((currentTasks) =>
+        currentTasks.map((currentTask) =>
+          currentTask.id === result.id
+            ? result
+            : currentTask
+        )
+      )
+
+      setEditingTask(null)
+      setIsFormOpen(false)
+    } catch (error) {
+      console.error(error)
+      setError('Não foi possível atualizar a tarefa.')
+    }
+  }
+
+  async function handleMoveTask(task, newStatus) {
+    try {
+      setError('')
+      
+      const result = await updateTask(task.id, {
+        title: task.title,
+        status: newStatus,
+      })
+
+      setTasks((currentTasks) =>
+        currentTasks.map((currentTask) =>
+          currentTask.id === result.id
+            ? result
+            : currentTask
+        )
+      )
+    }
+    catch (error) {
+      console.error(error)
+      setError('Não foi possível mover a tarefa.')
+    }
+  }
+
+  async function handleDeleteTask(id) {
+    const confirmed = window.confirm(
+      'Tem certeza que deseja excluir esta tarefa?'
+    )
+
+    if (!confirmed) {
+      return
+    }
+
+    try {
+      setError('')
+
+      await deleteTask(id)
+
+      setTasks((currentTasks) =>
+        currentTasks.filter((task) => task.id !== id)
+      )
+    } catch (error) {
+      console.error(error)
+      setError('Não foi possível excluir a tarefa.')
+    }
+  }
+
   return (
     <>
       <div className="mb-6 flex justify-end">
@@ -86,8 +163,13 @@ function KanbanBoard() {
 
       {isFormOpen && (
         <TaskForm
+          task={editingTask}
           onAddTask={handleAddTask}
-          onCancel={() => setIsFormOpen(false)}
+          onUpdateTask={handleUpdateTask}
+          onCancel={() => {
+            setEditingTask(null)
+            setIsFormOpen(false)
+          }}
         />
       )}
 
@@ -98,6 +180,9 @@ function KanbanBoard() {
             title={column.title}
             status={column.status}
             tasks={tasks}
+            onEdit={handleEdit}
+            onMove={handleMoveTask}
+            onDelete={handleDeleteTask}
           />
         ))}
       </div>
